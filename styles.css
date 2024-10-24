@@ -1,0 +1,285 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460); /* Gradient background for the body */
+    color: #fff;
+    line-height: 1.6;
+}
+
+/* Logo and Text Alignment */
+.logo-container {
+    display: flex;
+    align-items: center; /* Vertically align logo and text */
+}
+
+.logo-img {
+    max-width: 90px; /* Adjust the size of the logo */
+    margin-right: 10px; /* Add some space between logo and text */
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif; /* Matches the current style */
+}
+
+/* Headings: Use Montserrat for a striking appearance */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Navigation */
+header {
+    background: linear-gradient(135deg, #0f3460, #16213e); /* Gradient for the header */
+    padding: 2px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Align logo on the left and links on the right */
+    align-items: center;  /* Vertically center both elements */
+    max-width: 1450px;    /* Optional: limit the width of the navbar */
+    margin: 0 auto;       /* Center the navbar content */
+    padding: 0 20px;      /* Add some padding on the sides */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex; /* Align links in a row */
+}
+
+.nav-links li {
+    margin-left: 30px; /* Add space between links */
+}
+
+.nav-links a {
+    color: #e94560; /* Soft blue */
+    text-decoration: none;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #fff;
+}
+
+.cta-btn {
+    background-color: black;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background-color 0.3s;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.cta-btn:hover {
+    background-color: #e94560; /* Darker purple */
+}
+
+/* Section Titles: Consistent Style with Montserrat */
+section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #e94560;  /* Soft blue color for all section titles */
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Hero Section */
+#hero {
+    background: url('images/hero-image-test.jpg') no-repeat center center/cover;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-attachment: fixed;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.hero-content h1 {
+    font-size: 45px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-family: 'Montserrat', sans-serif;
+    display: inline-block;
+}
+
+.hero-content p {
+    font-size: 23px;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-family: 'Poppins', sans-serif;
+}
+
+#hero .cta-btn {
+    padding: 15px 30px;
+}
+
+/* About Section */
+#about {
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #290092, #6100a6); /* Purple gradient */
+}
+
+#about p {
+    font-size: 20px;
+    margin-bottom: 40px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Schedule Section */
+#schedule {
+    background: linear-gradient(135deg, #0f3460, #1a1a2e); /* Deep blue and purple */
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.schedule-date {
+    font-size: 23px; /* Slightly smaller than the main title */
+    color: #a1c6ea; /* Light blue to match schedule */
+    margin-bottom: 30px; /* Space between the date and the grid */
+    font-family: 'Poppins', sans-serif;
+}
+
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.schedule-item {
+    background-color: #16213e;
+    padding: 20px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.schedule-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-item h3 {
+    color: #a1c6ea;
+    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.schedule-item p {
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Sponsors Section */
+#sponsors {
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #440291, #851af7); /* Lighter gradient of purple and blue */
+    text-align: center;
+}
+
+.sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Create 2 columns */
+    gap: 40px; /* Space between sponsor logos */
+    justify-items: center; /* Center logos in each grid cell */
+}
+
+.sponsor-link {
+    text-decoration: none; /* Remove underline from the link */
+}
+
+.sponsor-logo img {
+    width: 200px; /* Ensure all logos have the same width */
+    height: 200px; /* Ensure all logos have the same height */
+    object-fit: contain; /* Maintain logo aspect ratio within the box */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.sponsor-logo img:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+/* FAQ Section */
+#faq {
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #1a1a2e, #16213e); /* Gradient for the FAQ section */
+    text-align: left; /* Align text to the left */
+}
+
+.faq-item {
+    margin-bottom: 20px;
+    text-align: left; /* Ensure the content is aligned left */
+}
+
+.faq-item h3 {
+    color: #fff; /* White color for the FAQ questions */
+    cursor: pointer;
+    font-size: 20px;
+    margin-bottom: 5px; /* Add space between question and answer */
+    display: flex; /* Use flexbox to position the arrow next to the text */
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.faq-item h3::before {
+    content: "▶"; /* Right-pointing arrow */
+    font-size: 16px;
+    margin-right: 10px; /* Space between the arrow and the question text */
+    transition: transform 0.3s ease; /* Smooth rotation when toggling */
+}
+
+.faq-answer {
+    color: #fff; /* White color for answers */
+    font-style: italic; /* Italicized text for answers */
+    margin-left: 40px; /* Indent the answer to the right */
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.faq-answer.active {
+    max-height: 200px; /* Expand the height for the active answer */
+}
+
+/* Arrow pointing down when answer is shown */
+.faq-item h3.active::before {
+    transform: rotate(90deg); /* Rotate the arrow down */
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #0f3460, #16213e); /* Blended dark purple and blue */
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+footer a {
+    color: #e94560;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Additional styling */
+footer p {
+    margin: 10px 0;
+}

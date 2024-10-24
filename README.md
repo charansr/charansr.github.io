@@ -1,2 +1,1 @@
-# charansr.github.io
-BISV Hacks Website.
+Website for BISV Hacks
