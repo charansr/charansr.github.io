@@ -47,25 +47,29 @@
     }
 
     #portfolio {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        align-items: start; /* ensures tiles align to top */
     }
 
     .tile {
-      position: relative;
-      overflow: hidden;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
+        position: relative;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+        overflow: hidden;
+        background: #fff;
     }
 
     .tile img {
-      width: 100%;
-      display: block;
-      border-radius: 12px;
+        width: 100%;
+        height: auto;   /* keep original aspect ratio */
+        display: block;
+        border-radius: 12px;
     }
+
 
     .tile:hover {
       transform: translateY(-5px);
@@ -139,7 +143,7 @@
     </div>
 
     <div class="tile" onclick="window.open('https://bisvhacks.com/')">
-      <img src="images/bisvhacks.jpg" alt="Project 3">
+      <img src="images/bisvhacks.jpg" alt="BISV Hacks">
       <div class="overlay">
         <h3>BISV Hacks</h3>
         <p>Organized first ever hackathon at BISV with 75+ participants</p>
@@ -147,7 +151,7 @@
     </div>
 
     <div class="tile" onclick="window.open('https://www.westutter.org/chapter/bay-area-teens')">
-      <img src="images/bisvhacks.jpg" alt="Project 3">
+      <img src="images/nsalogo.jpg" alt="NSA Chapter Leader">
       <div class="overlay">
         <h3>NSA Chapter Leader</h3>
         <p>Fostered confidence & a safe community for other teens who stutter.</p>
