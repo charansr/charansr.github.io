@@ -19,6 +19,40 @@
 
   <div id="map"></div>
 
+  <div id="sidebar">
+    <h2>Wheelchair Accessibility Across Seattle</h2>
+    <p>
+      This project visualizes neighborhood-level accessibility for
+      mobility-limited residents across Seattle census tracts.
+    </p>
+
+    <p>
+      Built as an extension of the
+      <a href="https://tcat.cs.washington.edu/opensidewalks/" target="_blank">
+        OpenSidewalks
+      </a>
+      project at the UW Taskar Center, this map integrates 
+      accessibility sidewalk metrics with geospatial analysis to highlight
+      structural inequities in urban mobility.
+    </p>
+
+    <label for="metric-select"><strong>Color by:</strong></label>
+    <select id="metric-select">
+      <option value="avg_pois">Accessible POIs</option>
+      <option value="avg_sidewalks">Sidewalk Quality</option>
+      <option value="avg_crossings">Crossing Accessibility</option>
+      <option value="curbramp_rate">Curb Ramp Coverage</option>
+      <option value="avg_cost">Travel Cost</option>
+    </select>
+
+    <p class="footnote">
+      Gray areas indicate insufficient or unavailable data.
+    </p>
+  </div>
+
+
+  
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script src="map.js"></script>

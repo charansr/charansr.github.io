@@ -1,70 +1,143 @@
-// Initialize map
 const map = L.map("map").setView([47.61, -122.33], 11);
 
-// Basemap
+// Base map
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-  {
-    attribution: "© OpenStreetMap © CARTO",
-    subdomains: "abcd",
-    maxZoom: 19
-  }
+  { attribution: "© OpenStreetMap © CARTO" }
 ).addTo(map);
 
-// Simple color ramp (no D3)
-function getColor(pois) {
-  if (pois == null) return "#cccccc";
-  if (pois > 8) return "#08306b";
-  if (pois > 6) return "#2171b5";
-  if (pois > 4) return "#4292c6";
-  if (pois > 2) return "#6baed6";
-  if (pois > 1) return "#9ecae1";
-  return "#c6dbef";
+// ==========================
+// Metric configuration
+// ==========================
+const metrics = {
+  avg_pois: {
+    label: "Average Accessible POIs",
+    domain: [0, 20],
+    format: v => v.toFixed(2)
+  },
+  avg_sidewalks: {
+    label: "Sidewalk Quality Score",
+    domain: [0, 20],
+    format: v => v.toFixed(2)
+  },
+  avg_crossings: {
+    label: "Crossing Accessibility",
+    domain: [0, 10],
+    format: v => v.toFixed(2)
+  },
+  curbramp_rate: {
+    label: "Curb Ramp Coverage (%)",
+    domain: [0, 100],
+    format: v => `${v.toFixed(1)}%`
+  },
+  avg_cost: {
+    label: "Average Travel Cost",
+    domain: [0, 1000],
+    format: v => v.toFixed(0)
+  }
+};
+
+let activeMetric = "avg_pois";
+
+// Color scale
+function getColor(value, domain) {
+  if (value === null || value === undefined) return "#cccccc";
+
+  const t = Math.max(
+    0,
+    Math.min(1, (value - domain[0]) / (domain[1] - domain[0]))
+  );
+
+  // perceptually smooth blue → purple
+  return `rgb(${50 + 120 * t}, ${120 - 40 * t}, ${200 - 80 * t})`;
 }
 
+// ==========================
+// Styling
+// ==========================
 function style(feature) {
-  const props = feature.properties || {};
+  const p = feature.properties;
+
+  if (!p.success) {
+    return {
+      fillColor: "#e0e0e0",
+      weight: 0.5,
+      color: "#999",
+      fillOpacity: 0.6
+    };
+  }
+
+  const metric = metrics[activeMetric];
   return {
-    fillColor: props.success ? getColor(props.avg_pois) : "#cccccc",
-    weight: 0.7,
+    fillColor: getColor(p[activeMetric], metric.domain),
+    weight: 0.6,
     color: "#444",
-    fillOpacity: 0.75
+    fillOpacity: 0.8
   };
 }
 
-function tooltipContent(props) {
-  if (!props || !props.success) {
-    return "<strong>No data available</strong>";
+// ==========================
+// Tooltip
+// ==========================
+function tooltipContent(p) {
+  if (!p.success) {
+    return "<strong>No accessibility data available</strong>";
   }
 
   return `
-    <strong>Census Tract ${props.geoid}</strong><br/>
-    Avg POIs: ${props.avg_pois.toFixed(2)}<br/>
-    Avg Cost: ${props.avg_cost.toFixed(1)}<br/>
-    Sidewalks: ${props.avg_sidewalks.toFixed(2)}<br/>
-    Crossings: ${props.avg_crossings.toFixed(2)}<br/>
-    Curb Ramp Rate: ${props.curbramp_rate.toFixed(1)}%
+    <strong>Census Tract ${p.geoid}</strong><br/>
+    ${metrics.avg_pois.label}: ${metrics.avg_pois.format(p.avg_pois)}<br/>
+    Sidewalks: ${metrics.avg_sidewalks.format(p.avg_sidewalks)}<br/>
+    Crossings: ${metrics.avg_crossings.format(p.avg_crossings)}<br/>
+    Curb Ramp Rate: ${metrics.curbramp_rate.format(p.curbramp_rate)}<br/>
+    Avg Cost: ${metrics.avg_cost.format(p.avg_cost)}
   `;
 }
 
-// Load GeoJSON
-fetch("./data/seattle_accessibility.geojson")
-  .then(res => {
-    if (!res.ok) {
-      throw new Error("GeoJSON failed to load");
-    }
-    return res.json();
-  })
-  .then(data => {
-    console.log("GeoJSON loaded:", data.features.length, "features");
+// ==========================
+// Legend
+// ==========================
+const legend = L.control({ position: "bottomleft" });
 
-    const geojsonLayer = L.geoJSON(data, {
+legend.onAdd = function () {
+  const div = L.DomUtil.create("div", "legend");
+  div.innerHTML = `<strong>${metrics[activeMetric].label}</strong><br/>`;
+  updateLegend(div);
+  return div;
+};
+
+function updateLegend(div) {
+  const { domain } = metrics[activeMetric];
+  div.innerHTML = `<strong>${metrics[activeMetric].label}</strong><br/>`;
+
+  for (let i = 0; i <= 5; i++) {
+    const v = domain[0] + (i / 5) * (domain[1] - domain[0]);
+    div.innerHTML += `
+      <i style="background:${getColor(v, domain)}"></i>
+      ${v.toFixed(1)}<br/>
+    `;
+  }
+
+  div.innerHTML += `<i style="background:#e0e0e0"></i> No data`;
+}
+
+legend.addTo(map);
+
+// ==========================
+// Load data
+// ==========================
+let geojsonLayer;
+
+fetch("data/seattle_accessibility.geojson")
+  .then(res => res.json())
+  .then(data => {
+    geojsonLayer = L.geoJSON(data, {
       style,
       onEachFeature: (feature, layer) => {
         layer.on({
           mouseover: e => {
             e.target.setStyle({ weight: 2 });
-            e.target.bindTooltip(
+            layer.bindTooltip(
               tooltipContent(feature.properties),
               { sticky: true }
             ).openTooltip();
@@ -75,10 +148,13 @@ fetch("./data/seattle_accessibility.geojson")
         });
       }
     }).addTo(map);
-
-    // 🔑 THIS IS CRITICAL
-    map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
-  })
-  .catch(err => {
-    console.error("Map failed:", err);
   });
+
+// ==========================
+// Metric selector
+// ==========================
+document.getElementById("metric-select").addEventListener("change", e => {
+  activeMetric = e.target.value;
+  geojsonLayer.setStyle(style);
+  updateLegend(document.querySelector(".legend"));
+});

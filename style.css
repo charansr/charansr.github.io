@@ -1,12 +1,17 @@
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* =====================
+   Header
+===================== */
 #header {
+  height: 70px;
   padding: 12px 20px;
   background: #ffffff;
   border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
 #header h1 {
@@ -19,14 +24,58 @@ body {
   color: #555;
 }
 
+/* =====================
+   Map
+===================== */
 #map {
-  height: calc(100vh - 80px);
+  position: absolute;
+  top: 70px;              /* BELOW header */
+  left: 0;
+  right: 320px;           /* Leave room for sidebar */
+  bottom: 0;
 }
 
+/* =====================
+   Sidebar (RIGHT)
+===================== */
+#sidebar {
+  position: absolute;
+  top: 70px;              /* BELOW header */
+  right: 0;
+  width: 320px;
+  bottom: 0;
+  padding: 16px;
+  background: #ffffff;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+/* =====================
+   Leaflet styling
+===================== */
 .leaflet-tooltip {
   background: white;
   color: #222;
   border-radius: 6px;
   padding: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.legend {
+  background: white;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.legend i {
+  width: 14px;
+  height: 14px;
+  float: left;
+  margin-right: 6px;
+  opacity: 0.9;
 }
