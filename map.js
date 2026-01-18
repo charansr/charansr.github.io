@@ -1,36 +1,39 @@
+// Initialize map
 const map = L.map("map").setView([47.61, -122.33], 11);
 
-// Professional neutral basemap
+// Basemap
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-  { attribution: "© OpenStreetMap © CARTO" }
+  {
+    attribution: "© OpenStreetMap © CARTO",
+    subdomains: "abcd",
+    maxZoom: 19
+  }
 ).addTo(map);
 
-// Color scale for avg POIs
-const colorScale = d3.scaleSequential()
-  .domain([0, 8])
-  .interpolator(d3.interpolateBlues);
+// Simple color ramp (no D3)
+function getColor(pois) {
+  if (pois == null) return "#cccccc";
+  if (pois > 8) return "#08306b";
+  if (pois > 6) return "#2171b5";
+  if (pois > 4) return "#4292c6";
+  if (pois > 2) return "#6baed6";
+  if (pois > 1) return "#9ecae1";
+  return "#c6dbef";
+}
 
 function style(feature) {
-  if (!feature.properties.success) {
-    return {
-      fillColor: "#cccccc",
-      weight: 0.5,
-      color: "#999",
-      fillOpacity: 0.6
-    };
-  }
-
+  const props = feature.properties || {};
   return {
-    fillColor: colorScale(feature.properties.avg_pois),
-    weight: 0.5,
-    color: "#555",
+    fillColor: props.success ? getColor(props.avg_pois) : "#cccccc",
+    weight: 0.7,
+    color: "#444",
     fillOpacity: 0.75
   };
 }
 
 function tooltipContent(props) {
-  if (!props.success) {
+  if (!props || !props.success) {
     return "<strong>No data available</strong>";
   }
 
@@ -44,10 +47,18 @@ function tooltipContent(props) {
   `;
 }
 
-fetch("data/seattle_accessibility.geojson")
-  .then(res => res.json())
+// Load GeoJSON
+fetch("./data/seattle_accessibility.geojson")
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("GeoJSON failed to load");
+    }
+    return res.json();
+  })
   .then(data => {
-    L.geoJSON(data, {
+    console.log("GeoJSON loaded:", data.features.length, "features");
+
+    const geojsonLayer = L.geoJSON(data, {
       style,
       onEachFeature: (feature, layer) => {
         layer.on({
@@ -59,9 +70,15 @@ fetch("data/seattle_accessibility.geojson")
             ).openTooltip();
           },
           mouseout: e => {
-            geojson.resetStyle(e.target);
+            geojsonLayer.resetStyle(e.target);
           }
         });
       }
     }).addTo(map);
+
+    // 🔑 THIS IS CRITICAL
+    map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
+  })
+  .catch(err => {
+    console.error("Map failed:", err);
   });
