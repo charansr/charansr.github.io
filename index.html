@@ -13,17 +13,18 @@
 
 <body>
   <div id="header">
-    <h1>Wheelchair Accessibility Across Seattle</h1>
-    <p>Interactive census-tract analysis for mobility-limited residents</p>
+    <h1>Wheelchair Accessibility for Transit Across Seattle</h1>
+    <p>Interactive census-tract analysis of how accessible transit is for mobility-limited residents</p>
   </div>
 
   <div id="map"></div>
 
   <div id="sidebar">
-    <h2>Wheelchair Accessibility Across Seattle</h2>
+    <h2>Wheelchair Accessibility for Transit Across Seattle</h2>
     <p>
-      This project visualizes neighborhood-level accessibility for
-      mobility-limited residents across Seattle census tracts.
+      This project visualizes neighborhood-level accessibility of transit(subway, buses, etc.) for
+      mobility-limited residents across Seattle census tracts. It displays how many transit centers 
+      the average resident in these census tracts can reach and the difficulty of getting there.
     </p>
 
     <p>
@@ -31,16 +32,15 @@
       <a href="https://tcat.cs.washington.edu/opensidewalks/" target="_blank">
         OpenSidewalks
       </a>
-      project at the UW Taskar Center, this map integrates 
-      accessibility sidewalk metrics with geospatial analysis to highlight
+      project at the UW Taskar Center, this map highlights
       structural inequities in urban mobility.
     </p>
 
     <label for="metric-select"><strong>Color by:</strong></label>
     <select id="metric-select">
-      <option value="avg_pois">Accessible POIs</option>
-      <option value="avg_sidewalks">Sidewalk Quality</option>
-      <option value="avg_crossings">Crossing Accessibility</option>
+      <option value="avg_pois">Accessible Transit Centers within 30 minutes</option>
+      <option value="avg_sidewalks">Sidewalk Frequency</option>
+      <option value="avg_crossings">Crossing Count</option>
       <option value="curbramp_rate">Curb Ramp Coverage</option>
       <option value="avg_cost">Travel Cost</option>
     </select>

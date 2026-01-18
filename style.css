@@ -79,3 +79,31 @@ body {
   margin-right: 6px;
   opacity: 0.9;
 }
+
+.legend-bar {
+  height: 14px;
+  width: 180px;
+  margin: 6px 0 4px;
+  border-radius: 4px;
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #444;
+}
+
+.legend-nodata {
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+.legend-nodata i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #e0e0e0;
+  margin-right: 6px;
+  vertical-align: middle;
+}

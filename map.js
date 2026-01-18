@@ -11,46 +11,57 @@ L.tileLayer(
 // ==========================
 const metrics = {
   avg_pois: {
-    label: "Average Accessible POIs",
+    label: "Average Accessible Transit",
     domain: [0, 20],
+    invert: false,
     format: v => v.toFixed(2)
   },
   avg_sidewalks: {
-    label: "Sidewalk Quality Score",
+    label: "Sidewalk Frequency",
     domain: [0, 20],
+    invert: false,
     format: v => v.toFixed(2)
   },
   avg_crossings: {
-    label: "Crossing Accessibility",
+    label: "Crossing Count",
     domain: [0, 10],
+    invert: false,
     format: v => v.toFixed(2)
   },
   curbramp_rate: {
     label: "Curb Ramp Coverage (%)",
     domain: [0, 100],
+    invert: false,
     format: v => `${v.toFixed(1)}%`
   },
   avg_cost: {
     label: "Average Travel Cost",
     domain: [0, 1000],
+    invert: true, // IMPORTANT
     format: v => v.toFixed(0)
   }
 };
 
+
 let activeMetric = "avg_pois";
 
 // Color scale
-function getColor(value, domain) {
-  if (value === null || value === undefined) return "#cccccc";
+function getColor(value, domain, invert = false) {
+  if (value === null || value === undefined) return "#e0e0e0";
 
-  const t = Math.max(
-    0,
-    Math.min(1, (value - domain[0]) / (domain[1] - domain[0]))
-  );
+  let t = (value - domain[0]) / (domain[1] - domain[0]);
+  t = Math.max(0, Math.min(1, t));
 
-  // perceptually smooth blue → purple
-  return `rgb(${50 + 120 * t}, ${120 - 40 * t}, ${200 - 80 * t})`;
+  if (invert) t = 1 - t;
+
+  // Red → Yellow → Green
+  const r = t < 0.5 ? 255 : Math.round(255 - 510 * (t - 0.5));
+  const g = t < 0.5 ? Math.round(510 * t) : 255;
+  const b = 80;
+
+  return `rgb(${r}, ${g}, ${b})`;
 }
+
 
 // ==========================
 // Styling
@@ -68,13 +79,19 @@ function style(feature) {
   }
 
   const metric = metrics[activeMetric];
+
   return {
-    fillColor: getColor(p[activeMetric], metric.domain),
+    fillColor: getColor(
+      p[activeMetric],
+      metric.domain,
+      metric.invert
+    ),
     weight: 0.6,
     color: "#444",
-    fillOpacity: 0.8
+    fillOpacity: 0.85
   };
 }
+
 
 // ==========================
 // Tooltip
@@ -101,27 +118,43 @@ const legend = L.control({ position: "bottomleft" });
 
 legend.onAdd = function () {
   const div = L.DomUtil.create("div", "legend");
-  div.innerHTML = `<strong>${metrics[activeMetric].label}</strong><br/>`;
   updateLegend(div);
   return div;
 };
 
 function updateLegend(div) {
-  const { domain } = metrics[activeMetric];
-  div.innerHTML = `<strong>${metrics[activeMetric].label}</strong><br/>`;
+  const metric = metrics[activeMetric];
 
-  for (let i = 0; i <= 5; i++) {
-    const v = domain[0] + (i / 5) * (domain[1] - domain[0]);
-    div.innerHTML += `
-      <i style="background:${getColor(v, domain)}"></i>
-      ${v.toFixed(1)}<br/>
-    `;
-  }
+  div.innerHTML = `
+    <strong>${metric.label}</strong>
+    <div class="legend-bar"></div>
+    <div class="legend-labels">
+      <span>${metric.invert ? "High" : "Low"}</span>
+      <span>${metric.invert ? "Low" : "High"}</span>
+    </div>
+    <div class="legend-nodata">
+      <i></i> No data
+    </div>
+  `;
 
-  div.innerHTML += `<i style="background:#e0e0e0"></i> No data`;
+  const bar = div.querySelector(".legend-bar");
+
+  bar.style.background = `
+    linear-gradient(to right,
+      ${getColor(metric.domain[0], metric.domain, metric.invert)},
+      ${getColor(
+        (metric.domain[0] + metric.domain[1]) / 2,
+        metric.domain,
+        metric.invert
+      )},
+      ${getColor(metric.domain[1], metric.domain, metric.invert)}
+    )
+  `;
 }
 
 legend.addTo(map);
+
+
 
 // ==========================
 // Load data
