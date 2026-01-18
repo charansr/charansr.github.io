@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+#header {
+  padding: 12px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+}
+
+#header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+#header p {
+  margin: 4px 0 0;
+  color: #555;
+}
+
+#map {
+  height: calc(100vh - 80px);
+}
+
+.leaflet-tooltip {
+  background: white;
+  color: #222;
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
